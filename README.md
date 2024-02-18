@@ -1,7 +1,15 @@
-# Welcome to the story of my journey in the world of PROGRAMMING !
+# Welcome in my programming center !
+
+You'll find here all my projects, weird tests and archives as I venture in the strange world of programming, developpement and computers.
+
+
 
 This is intended as recruiters/teachers/colleagues who'd want to know more about me, as something I can look back to, I want to keep at least a trace of what I did and how, and maybe as a ressource for some people.
 
+
+# My story
+
+This is intended as recruiters/teachers/colleagues who'd want to know more about me, as something I can look back to, I want to keep at least a trace of what I did and how, and maybe as a ressource for some people.
 
 ## 1. The beginning
 
