@@ -1,11 +1,14 @@
-# Welcome to my story in the world or PROGRAMMING !
+# Welcome to the story of my journey in the world of PROGRAMMING !
+
+This is intended as recruiters/teachers/colleagues who'd want to know more about me, as something I can look back to, I want to keep at least a trace of what I did and how, and maybe as a ressource for some people.
 
 
+## 1. The beginning
+
+Being born in 2002, I understand fairly easily most of the "new" technology, but programming isn't just understanding things that work, it's creating and solving things that don't.
 
 
-
-
-ressources I used :
+## ressources I used :
 
 - The Linux Command Line : https://www.linuxcommand.org/tlcl.php
     An amazing book by William Shotts that introduced me to Linux/GNU, command line, scripting and everything you need to know to start your journey with linux, I still use often.
