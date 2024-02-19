@@ -6,6 +6,13 @@ You'll find here all my projects, weird tests and archives as I venture in the s
 This is intended as recruiters/teachers/colleagues who'd want to know more about me, as something I can look back to, I want to keep at least a trace of what I did and how, and maybe as a ressource for some people.
 
 
+* Sorting
+
+    + 10 : important WIP
+    + 20 : WIP
+    + 50 : finished projects
+    + 70 : possible projects
+    + 90 : archives
 
 ## ressources I used :
 
