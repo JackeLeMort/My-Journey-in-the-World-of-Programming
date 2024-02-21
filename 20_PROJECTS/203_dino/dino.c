@@ -3,8 +3,10 @@
 int main(){
   initscr();
   addstr("Hello World!");
-  getch();
   refresh;
+  addstr("teeees!");
+  refresh;
+  getch();
   endwin();
   return 0;
 }
