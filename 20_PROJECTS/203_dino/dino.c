@@ -118,8 +118,8 @@ int game(int speed, int ground){
       mvaddch( ground +1, 5, 'O' );
       mvaddch( ground +2, 5, '0' );
       mvaddch( ground +3, 5, ' ' );
-      usleep(1000000);
       refresh();
+      usleep(100000);
 
       i += 10;
     }
