@@ -3,10 +3,11 @@
 #include "ctype.h"
 #include "stdlib.h"
 #include "string.h"
+#include "time.h"
 
 //function
 int start_screen(int speed);
-int game(int speed);
+int game(int speed, int game);
 int end_screen(int score);
 
 //variables
@@ -51,18 +52,26 @@ int start_screen(int speed) {
   noecho();
   clear();
 
+  int ground = LINES*2/5;
+
   char *title = "Welcome to DINO";
   char *subtitle = "A little game aiming to replicate chrome dino in a terminal, made in C";
   char *ready = "Please press space when ready";
 
-  move (LINES/3, (COLS - strlen(title)) /2 );
+  move (ground -5, (COLS - strlen(title)) /2 );
   printw ("%s", title);
-  move (LINES /3 +3, (COLS - strlen(subtitle))/2 );
+  move (ground -3, (COLS - strlen(subtitle))/2 );
   printw ("%s", subtitle );
-  move (LINES /3 +6, COLS /2  -5);
+  move (ground + 5, COLS /2  -5);
   printw ("Speed : %d", speed);
-  move (LINES /3 +8, (COLS - strlen(ready))/2);
+  move (ground  + 3, (COLS - strlen(ready))/2);
   printw ("%s", ready);
+
+  for (int i = 0; i < COLS; i++){
+    mvaddch(ground , i, '_');
+  }
+  mvaddch( ground +1, 5, '0' );
+  mvaddch( ground +2, 5, '0' );
 
   refresh();
 
@@ -71,14 +80,60 @@ int start_screen(int speed) {
     c = getchar();
   } while (c != ' ');
 
-  game(speed);
+  game(speed, ground);
  }
 
 
-int game(int speed){
+int game(int speed, int ground){
   clear();
+  for (int i = 0; i < COLS; i++){
+    mvaddch(ground , i, '_');
+  }
+  mvaddch( ground +1, 5, 'O' );
+  mvaddch( ground +2, 5, '0' );
 
-  endwin();
-  return 0;
+  refresh();
+
+  int i = 0;
+  do {
+    if (getchar() == ' '){
+      mvaddch( ground +1, 5, ' ' );
+      mvaddch( ground +2, 5, '0' );
+      mvaddch( ground +3, 5, '0' );
+      refresh();
+      usleep(50000);
+
+      mvaddch( ground +2, 5, ' ' );
+      mvaddch( ground +3, 5, '0' );
+      mvaddch( ground +4, 5, '0' );
+      refresh();
+      usleep(750000);
+
+      mvaddch( ground +2, 5, '0' );
+      mvaddch( ground +3, 5, '0' );
+      mvaddch( ground +4, 5, ' ' );
+      refresh();
+      usleep(100000);
+
+      mvaddch( ground +1, 5, 'O' );
+      mvaddch( ground +2, 5, '0' );
+      mvaddch( ground +3, 5, ' ' );
+      usleep(1000000);
+      refresh();
+
+      i += 10;
+    }
+    else {
+      i++;
+    }
+
+  } while (1);
+
+  end_screen(speed);
 }
 
+
+int end_screen(int speed){
+
+  endwin();
+}
