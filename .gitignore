@@ -1,0 +1,5 @@
+# to ignore file
+
+ig_*
+vgcore*
+*.out
