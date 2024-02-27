@@ -11,12 +11,12 @@
 //function
 int start_screen(); // 69
 int game(); // 104
-int end_screen(int distance); //136
+int end_screen(); //136
 
 int character(int position);
 
-void *collision();
-void *distance_travelled();
+void *collision(void *vargp);
+void *distance_travelled(void *vargp);
 
 //variables
 int character_position = 0;
@@ -24,17 +24,16 @@ int ennemy_number_max = 3;
 int ennemy_position[3];
 int ennemy_number_screen;
 
-bool game_state;
 int ground;
 int right;
 int left;
 
+bool game_state;
 int distance;
-char c;
-
 int speed;
 int speed_default = 2;
 
+bool replay = true;
 int score_last = 0;
 int game_number_session = 1;
 //int game_number_all = $idk how to do that yet
@@ -44,9 +43,8 @@ int score_best_session = 0;
 char *title = "Welcome to DINO";
 char *subtitle = "A little game aiming to replicate chrome dino in a terminal, made in C";
 char *ready = "Please press space when ready";
-
-char *score = "you ran an insane amount of: ";
-
+char *score = "You ran an insane amount of: ";
+char *play_again = "Press 'space' to play again or any other key to quit.";
 
 
 // main function, check arguments and start start_screen
@@ -72,8 +70,12 @@ int main(int argc, char **argv)
     speed = speed_default;
   }
   start_screen();
-  game();
-  end_screen(distance);
+  while (replay == true) {
+    game();
+    end_screen();
+  }
+  endwin();
+  return 0;
 }
 
 
@@ -87,8 +89,6 @@ int start_screen() {
   clear();
 
   ground = LINES*2/5;
-  right = COLS*4/5;
-  left = COLS*1/5;
 
   move (ground -5, (COLS - strlen(title)) /2 );
   printw ("%s", title);
@@ -129,7 +129,7 @@ int game(){
 
   pthread_t collision_id;
   pthread_t distance_travelled_id;
-//  pthread_create (&collision_id, NULL, collision, NULL);
+  pthread_create (&collision_id, NULL, collision, NULL);
   pthread_create (&distance_travelled_id, NULL, distance_travelled, NULL);
 
   //character
@@ -138,7 +138,7 @@ int game(){
   refresh();
 
   distance = 0;
-  //int time_bet_hits = 100;
+  char c;
 
   while (game_state) {
 
@@ -153,23 +153,33 @@ int game(){
       character(0);
     }
     else if (c == 'q') {
-	return 0;
+      return 0;
     }
     else {
       character(0);
     }
   }
+  return 0;
 }
 
 // END SCREEN
-int end_screen (int distance){
+int end_screen (){
   game_state = false;
   //free(ennemy_position);
-  move(ground +5, COLS/2 - strlen(score) -2);
+  refresh();
+  move(ground -5, COLS/2 - strlen(score)/2 -2);
   printw ("%s%i", score, distance);
-  getch();
-  endwin();
-  exit(0);
+  mvprintw(ground-3, COLS/2 - strlen(play_again)/2, "%s", play_again);
+  timeout(-10);
+  int c = getch();
+  if (c == ' ') {
+    replay = true;
+    return 0;
+  }
+  else {
+    replay = false;
+    return 0;
+  }
 }
 
 
@@ -188,7 +198,6 @@ int character(int position){
       refresh();
       character_position = 1;
       usleep(100000);
-      distance += 1;
       break;
 
     case 2:
@@ -198,7 +207,6 @@ int character(int position){
       refresh();
       character_position = 2;
       usleep(800000);
-      distance += 8;
       break;
 
     case 0:
@@ -208,7 +216,6 @@ int character(int position){
       refresh();
       character_position = 0;
       usleep(100000);
-      distance += 1;
   }
 }
 
@@ -217,23 +224,27 @@ int character(int position){
 
 //check if lose when game is running
 void *collision(void *vargp){
-  do {
-    for (int i = 0; i < ennemy_number_max; i++) {
+  while (game_state == true) {
+    for (int i = 0; i < ennemy_number_screen; i++) {
       if (character_position == ennemy_position[i] ) {
         game_state = false;
-        end_screen(distance);
       }
+      usleep(100000*2/speed);
     }
-  } while (game_state == true);
+  }
 }
 
 
 //display current score while playing
 void *distance_travelled(void *vargp){
-  //WINDOW *distance_box = newwin (3, 15, 2, COLS-20);
-  WINDOW *distance_box = newwin (15, 15, 15, 15);
+  WINDOW *distance_box = newwin (3, 15, 2, COLS-20);
+  noecho();
   do {
-    wprintw (distance_box, "distance: %d", distance);
+    distance += 1;
+    mvwprintw (distance_box, 1, 1, "distance: %d   ", distance);
+    redrawwin(distance_box);
+    wrefresh(distance_box);
+    usleep(100000*2/speed);
   } while (game_state == true);
   delwin (distance_box);
   pthread_exit;
