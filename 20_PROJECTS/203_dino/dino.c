@@ -15,6 +15,7 @@ int end_screen(); //136
 
 int character(int position);
 
+void *ennemies(void *vargp);
 void *collision(void *vargp);
 void *distance_travelled(void *vargp);
 
@@ -220,7 +221,12 @@ int character(int position){
 }
 
 
+void *ennemies(void *vargp) {
+  while (game_state) {
 
+  }
+  pthread_exit;
+}
 
 //check if lose when game is running
 void *collision(void *vargp){
@@ -232,6 +238,7 @@ void *collision(void *vargp){
       usleep(100000*2/speed);
     }
   }
+  pthread_exit;
 }
 
 
@@ -241,7 +248,8 @@ void *distance_travelled(void *vargp){
   noecho();
   do {
     distance += 1;
-    mvwprintw (distance_box, 1, 1, "distance: %d   ", distance);
+    //box(distance_box,0,0);
+    mvwprintw (distance_box, 1, 1, "distance: %d", distance);
     redrawwin(distance_box);
     wrefresh(distance_box);
     usleep(100000*2/speed);
