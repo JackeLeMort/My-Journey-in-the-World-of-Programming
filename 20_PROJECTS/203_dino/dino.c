@@ -65,10 +65,10 @@ int main(int argc, char **argv)
         return 1;
         }
       }
-    speed = atoi(argv[1]);
+    speed = (100000*2)/ atoi(argv[1]);
   }
   else if (argc == 1) {
-    speed = speed_default;
+    speed = (100000*2)/ speed_default;
   }
   start_screen();
   while (replay == true) {
@@ -96,7 +96,7 @@ int start_screen() {
   move (ground -3, (COLS - strlen(subtitle))/2 );
   printw ("%s", subtitle );
   move (ground + 5, COLS /2  -5);
-  printw ("Speed : %d", speed);
+  printw ("Speed : %d", speed*2/100000);
   move (ground  + 3, (COLS - strlen(ready))/2);
   printw ("%s", ready);
 
@@ -110,7 +110,7 @@ int start_screen() {
 
   int c;
   do {
-    c = getchar();
+    c = getch();
   } while (c != ' ');
 	return 0;
  }
@@ -125,13 +125,15 @@ int game(){
   }
   refresh();
 
-  //ennemy_position = malloc(ennemy_number_max * sizeof(int));
-  game_state = true;
-
   pthread_t collision_id;
   pthread_t distance_travelled_id;
+  pthread_t ennemies_id;
   pthread_create (&collision_id, NULL, collision, NULL);
   pthread_create (&distance_travelled_id, NULL, distance_travelled, NULL);
+  pthread_create (&ennemies_id, NULL, ennemies, NULL);
+
+  //ennemy_position = malloc(ennemy_number_max * sizeof(int));
+  game_state = true;
 
   //character
   mvaddch( ground +1, 5, 'O' );
@@ -143,6 +145,7 @@ int game(){
 
   while (game_state) {
 
+    noecho();
     timeout(100);
     c = getch();
 
@@ -166,6 +169,8 @@ int game(){
 // END SCREEN
 int end_screen (){
   game_state = false;
+  clear();
+  refresh();
   //free(ennemy_position);
   refresh();
   move(ground -5, COLS/2 - strlen(score)/2 -2);
@@ -198,7 +203,7 @@ int character(int position){
       mvaddch( ground +4, 5, ' ' );
       refresh();
       character_position = 1;
-      usleep(100000);
+      usleep(speed);
       break;
 
     case 2:
@@ -207,7 +212,7 @@ int character(int position){
       mvaddch( ground +4, 5, '0' );
       refresh();
       character_position = 2;
-      usleep(800000);
+      usleep(8*speed);
       break;
 
     case 0:
@@ -216,14 +221,23 @@ int character(int position){
       mvaddch( ground +3, 5, ' ' );
       refresh();
       character_position = 0;
-      usleep(100000);
+      usleep(speed);
   }
 }
 
 
 void *ennemies(void *vargp) {
+  ennemy_number_screen = 1;
   while (game_state) {
-
+    for (int i = COLS; i > 0; i--) {
+      mvprintw(ground+1, i-1,"<");
+      mvprintw(ground+1, i," ");
+      refresh();
+      if (i == 5) {
+        ennemy_position[0] = i;
+      }
+      usleep(speed);
+    }
   }
   pthread_exit;
 }
@@ -235,7 +249,7 @@ void *collision(void *vargp){
       if (character_position == ennemy_position[i] ) {
         game_state = false;
       }
-      usleep(100000*2/speed);
+      usleep(speed);
     }
   }
   pthread_exit;
@@ -244,7 +258,7 @@ void *collision(void *vargp){
 
 //display current score while playing
 void *distance_travelled(void *vargp){
-  WINDOW *distance_box = newwin (3, 15, 2, COLS-20);
+  WINDOW *distance_box = newwin (3, 16, 2, COLS-20);
   noecho();
   do {
     distance += 1;
@@ -252,8 +266,9 @@ void *distance_travelled(void *vargp){
     mvwprintw (distance_box, 1, 1, "distance: %d", distance);
     redrawwin(distance_box);
     wrefresh(distance_box);
-    usleep(100000*2/speed);
+    usleep(speed);
   } while (game_state == true);
+  clear();
   delwin (distance_box);
   pthread_exit;
 }
