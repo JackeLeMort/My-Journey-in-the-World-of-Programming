@@ -72,6 +72,8 @@ int main(int argc, char **argv)
     speed = speed_default;
   }
   start_screen();
+  game();
+  end_screen(distance);
 }
 
 
@@ -109,8 +111,7 @@ int start_screen() {
   do {
     c = getchar();
   } while (c != ' ');
-
-  game();
+	return 0;
  }
 
 
@@ -152,7 +153,7 @@ int game(){
       character(0);
     }
     else if (c == 'q') {
-      end_screen(distance);
+	return 0;
     }
     else {
       character(0);
