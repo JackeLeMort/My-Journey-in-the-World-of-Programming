@@ -47,6 +47,7 @@ char *play_again = "Press 'space' to play again or any other key to quit.";
 WINDOW *charac_enn;
 WINDOW *distance_box;
 
+pthread_mutex_t screen_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 
 // main function, check arguments and start functions
@@ -207,41 +208,57 @@ int end_screen (){
 // character position
 int character(int position){
 
+
   switch (position) {
 
     case 1:
+      pthread_mutex_lock(&screen_mutex);
       mvwaddch( charac_enn, 0, 5, ' ' );
       mvwaddch( charac_enn, 1, 5, '0' );
       mvwaddch( charac_enn, 2, 5, '0' );
       mvwaddch( charac_enn, 3, 5, ' ' );
       wrefresh(charac_enn);
       character_position = 1;
+      pthread_mutex_unlock(&screen_mutex);
       usleep(speed);
       break;
 
     case 2:
+      pthread_mutex_lock(&screen_mutex);
       mvwaddch( charac_enn, 1, 5, ' ' );
       mvwaddch( charac_enn, 2, 5, '0' );
       mvwaddch( charac_enn, 3, 5, '0' );
       wrefresh(charac_enn);
       character_position = 2;
+      pthread_mutex_unlock(&screen_mutex);
       usleep(speed*8);
       break;
 
     case 0:
+      pthread_mutex_lock(&screen_mutex);
       mvwaddch( charac_enn, 0, 5, '0' );
       mvwaddch( charac_enn, 1, 5, '0' );
       mvwaddch( charac_enn, 2, 5, ' ' );
       wrefresh(charac_enn);
       character_position = 0;
+      pthread_mutex_unlock(&screen_mutex);
       usleep(speed);
       break;
   }
 }
 
 void *ennemies(void *vargp) {
+  noecho();
   while (game_state) {
-
+    for (int i = 100; i > 0; i--) {
+      pthread_mutex_lock(&screen_mutex);
+      mvwprintw (charac_enn, 0, i, "< ");
+      wrefresh(charac_enn);
+      pthread_mutex_unlock(&screen_mutex);
+      usleep(speed);
+    }
+    mvwprintw (charac_enn, 0, 1, " ");
+    wrefresh(charac_enn);
   }
 }
 
@@ -261,9 +278,11 @@ void *distance_travelled(void *vargp){
   refresh();
   while (game_state) {
     distance += 1;
+    pthread_mutex_lock(&screen_mutex);
     mvwprintw (distance_box, 2, 1, "distance: %d  ", distance);
     redrawwin(distance_box);
     wrefresh(distance_box);
+    pthread_mutex_unlock(&screen_mutex);
     usleep(speed);
   }
   pthread_exit(NULL);
