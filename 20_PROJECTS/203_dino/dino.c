@@ -146,10 +146,10 @@ int game(){
   //
   pthread_t collision_id;
   pthread_t distance_travelled_id;
-  //pthread_t ennemies_id;
+  pthread_t ennemies_id;
   pthread_create (&collision_id, NULL, collision, NULL);
   pthread_create (&distance_travelled_id, NULL, distance_travelled, NULL);
-  //pthread_create (&ennemies_id, NULL, ennemies, NULL);
+  pthread_create (&ennemies_id, NULL, ennemies, NULL);
 
 
   char c;
@@ -239,6 +239,11 @@ int character(int position){
   }
 }
 
+void *ennemies(void *vargp) {
+  while (game_state) {
+
+  }
+}
 
 
 //check if lose when game is running
