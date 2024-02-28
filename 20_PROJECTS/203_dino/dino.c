@@ -22,15 +22,11 @@ void *distance_travelled(void *vargp);
 //variables
 int character_position = 0;
 int ennemy_number_max = 3;
-int ennemy_position[3];
-int ennemy_number_screen;
+int ennemy_position;
 
 int ground;
-int right;
-int left;
-
 bool game_state;
-int distance;
+int distance = 0;
 int speed;
 int speed_default = 2;
 
@@ -39,7 +35,7 @@ int score_last = 0;
 int game_number_session = 1;
 //int game_number_all = $idk how to do that yet
 int score_best_session = 0;
-//int score_best_all = 0;
+int score_best_all = 0;
 
 char *title = "Welcome to DINO";
 char *subtitle = "A little game aiming to replicate chrome dino in a terminal, made in C";
@@ -47,8 +43,13 @@ char *ready = "Please press space when ready";
 char *score = "You ran an insane amount of: ";
 char *play_again = "Press 'space' to play again or any other key to quit.";
 
+//init screen and windows
+WINDOW *charac_enn;
+WINDOW *distance_box;
 
-// main function, check arguments and start start_screen
+
+
+// main function, check arguments and start functions
 int main(int argc, char **argv)
 {
   if (argc > 2)
@@ -82,6 +83,7 @@ int main(int argc, char **argv)
 
 //init screem, welcomes player and wait for his input to start game
 int start_screen() {
+
   initscr();
   cbreak();
   noecho();
@@ -91,56 +93,65 @@ int start_screen() {
 
   ground = LINES*2/5;
 
+  charac_enn = newwin (4, 100, ground+1, COLS/2-50);
+  distance_box = newwin (3, 16, 2, COLS-20);
+
   move (ground -5, (COLS - strlen(title)) /2 );
   printw ("%s", title);
   move (ground -3, (COLS - strlen(subtitle))/2 );
   printw ("%s", subtitle );
-  move (ground + 5, COLS /2  -5);
+  move (ground + 6, COLS /2  -5);
   printw ("Speed : %d", speed*2/100000);
-  move (ground  + 3, (COLS - strlen(ready))/2);
+  move (ground  + 4, (COLS - strlen(ready))/2);
   printw ("%s", ready);
 
-  for (int i = 0; i < COLS; i++){
-    mvaddch(ground , i, '_');
+  for (int i = 0; i < 100; i++){
+    mvaddch(ground, COLS/2-50 +i, '_');
   }
-  mvaddch( ground +1, 5, '0' );
-  mvaddch( ground +2, 5, '0' );
-
   refresh();
 
-  int c;
-  do {
+  mvwaddch(charac_enn, 0, 4, '0' );
+  mvwaddch(charac_enn, 1, 4, '0' );
+  wnoutrefresh(charac_enn);
+  wrefresh(charac_enn);
+
+  doupdate();
+
+  char c;
+  while (c != ' ') {
     c = getch();
-  } while (c != ' ');
+  } 
 	return 0;
  }
 
 
-//
+//game
 int game(){
 
   clear();
-  for (int i = 0; i < COLS; i++){
-    mvaddch(ground , i, '_');
-  }
   refresh();
 
-  pthread_t collision_id;
-  pthread_t distance_travelled_id;
-  pthread_t ennemies_id;
-  pthread_create (&collision_id, NULL, collision, NULL);
-  pthread_create (&distance_travelled_id, NULL, distance_travelled, NULL);
-  pthread_create (&ennemies_id, NULL, ennemies, NULL);
+  for (int i = 0; i < 100; i++){
+    mvaddch(ground, COLS/2-50 +i, '_');
+    refresh();
+    usleep(5000);
+  }
 
-  //ennemy_position = malloc(ennemy_number_max * sizeof(int));
   game_state = true;
 
   //character
-  mvaddch( ground +1, 5, 'O' );
-  mvaddch( ground +2, 5, '0' );
-  refresh();
+  mvwaddch(charac_enn, 0, 5, 'O' );
+  mvwaddch(charac_enn, 1, 5, '0' );
+  wrefresh(charac_enn);
+  //
+  pthread_t collision_id;
+  pthread_t distance_travelled_id;
+  //pthread_t ennemies_id;
+  pthread_create (&collision_id, NULL, collision, NULL);
+  pthread_create (&distance_travelled_id, NULL, distance_travelled, NULL);
+  //pthread_create (&ennemies_id, NULL, ennemies, NULL);
 
-  distance = 0;
+
   char c;
 
   while (game_state) {
@@ -157,7 +168,7 @@ int game(){
       character(0);
     }
     else if (c == 'q') {
-      return 0;
+      game_state = false;
     }
     else {
       character(0);
@@ -168,14 +179,16 @@ int game(){
 
 // END SCREEN
 int end_screen (){
-  game_state = false;
   clear();
   refresh();
-  //free(ennemy_position);
-  refresh();
+  score_last = distance;
+  if (distance > score_best_session) { score_best_session = distance;}
+  if (distance > score_best_all) { score_best_all = distance;}
   move(ground -5, COLS/2 - strlen(score)/2 -2);
-  printw ("%s%i", score, distance);
+  printw ("%s%i", score, score_last);
+  distance = 0;
   mvprintw(ground-3, COLS/2 - strlen(play_again)/2, "%s", play_again);
+  refresh();
   timeout(-10);
   int c = getch();
   if (c == ' ') {
@@ -197,78 +210,56 @@ int character(int position){
   switch (position) {
 
     case 1:
-      mvaddch( ground +1, 5, ' ' );
-      mvaddch( ground +2, 5, '0' );
-      mvaddch( ground +3, 5, '0' );
-      mvaddch( ground +4, 5, ' ' );
-      refresh();
+      mvwaddch( charac_enn, 0, 5, ' ' );
+      mvwaddch( charac_enn, 1, 5, '0' );
+      mvwaddch( charac_enn, 2, 5, '0' );
+      mvwaddch( charac_enn, 3, 5, ' ' );
+      wrefresh(charac_enn);
       character_position = 1;
       usleep(speed);
       break;
 
     case 2:
-      mvaddch( ground +2, 5, ' ' );
-      mvaddch( ground +3, 5, '0' );
-      mvaddch( ground +4, 5, '0' );
-      refresh();
+      mvwaddch( charac_enn, 1, 5, ' ' );
+      mvwaddch( charac_enn, 2, 5, '0' );
+      mvwaddch( charac_enn, 3, 5, '0' );
+      wrefresh(charac_enn);
       character_position = 2;
-      usleep(8*speed);
+      usleep(speed*8);
       break;
 
     case 0:
-      mvaddch( ground +1, 5, '0' );
-      mvaddch( ground +2, 5, '0' );
-      mvaddch( ground +3, 5, ' ' );
-      refresh();
+      mvwaddch( charac_enn, 0, 5, '0' );
+      mvwaddch( charac_enn, 1, 5, '0' );
+      mvwaddch( charac_enn, 2, 5, ' ' );
+      wrefresh(charac_enn);
       character_position = 0;
       usleep(speed);
+      break;
   }
 }
 
 
-void *ennemies(void *vargp) {
-  ennemy_number_screen = 1;
-  while (game_state) {
-    for (int i = COLS; i > 0; i--) {
-      mvprintw(ground+1, i-1,"<");
-      mvprintw(ground+1, i," ");
-      refresh();
-      if (i == 5) {
-        ennemy_position[0] = i;
-      }
-      usleep(speed);
-    }
-  }
-  pthread_exit;
-}
 
 //check if lose when game is running
 void *collision(void *vargp){
   while (game_state == true) {
-    for (int i = 0; i < ennemy_number_screen; i++) {
-      if (character_position == ennemy_position[i] ) {
-        game_state = false;
-      }
-      usleep(speed);
-    }
   }
-  pthread_exit;
+  pthread_exit(NULL);
 }
 
 
 //display current score while playing
 void *distance_travelled(void *vargp){
-  WINDOW *distance_box = newwin (3, 16, 2, COLS-20);
   noecho();
-  do {
+  distance = 0;
+  refresh();
+  while (game_state) {
     distance += 1;
-    //box(distance_box,0,0);
-    mvwprintw (distance_box, 1, 1, "distance: %d", distance);
+    mvwprintw (distance_box, 2, 1, "distance: %d  ", distance);
     redrawwin(distance_box);
     wrefresh(distance_box);
     usleep(speed);
-  } while (game_state == true);
-  clear();
-  delwin (distance_box);
-  pthread_exit;
+  }
+  pthread_exit(NULL);
 }
