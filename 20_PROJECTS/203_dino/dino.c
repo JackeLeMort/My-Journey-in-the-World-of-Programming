@@ -148,7 +148,7 @@ int game(){
   pthread_t collision_id;
   pthread_t distance_travelled_id;
   pthread_t ennemies_id;
-  pthread_create (&collision_id, NULL, collision, NULL);
+  //pthread_create (&collision_id, NULL, collision, NULL);
   pthread_create (&distance_travelled_id, NULL, distance_travelled, NULL);
   pthread_create (&ennemies_id, NULL, ennemies, NULL);
 
@@ -251,11 +251,14 @@ void *ennemies(void *vargp) {
   noecho();
   while (game_state) {
     for (int i = 100; i > 0; i--) {
-      pthread_mutex_lock(&screen_mutex);
-      mvwprintw (charac_enn, 0, i, "< ");
-      wrefresh(charac_enn);
-      pthread_mutex_unlock(&screen_mutex);
-      usleep(speed);
+      if (game_state == false) {i = -1; }
+        pthread_mutex_lock(&screen_mutex);
+        mvwprintw (charac_enn, 0, i, "< ");
+        wrefresh(charac_enn);
+        pthread_mutex_unlock(&screen_mutex);
+        if ( i == 5 ) { ennemy_position = 0; }
+        else if ( i == 4 ) { ennemy_position = -1; }
+        usleep(speed);
     }
     mvwprintw (charac_enn, 0, 1, " ");
     wrefresh(charac_enn);
@@ -266,6 +269,9 @@ void *ennemies(void *vargp) {
 //check if lose when game is running
 void *collision(void *vargp){
   while (game_state == true) {
+    if ( character_position == ennemy_position ) {
+      game_state = false;
+    }
   }
   pthread_exit(NULL);
 }
