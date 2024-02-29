@@ -29,6 +29,7 @@ bool game_state;
 int distance = 0;
 int speed;
 int speed_default = 2;
+int speed_level;
 int jump_time;
 
 bool replay = true;
@@ -68,12 +69,13 @@ int main(int argc, char **argv)
         return 1;
         }
       }
-    speed = (100000*2)/ atoi(argv[1]);
+    speed_level = atoi(argv[1]);
+    speed = (100000*2)/ speed_level;
   }
   else if (argc == 1) {
     speed = (100000*2)/ speed_default;
   }
-  jump_time = 80000 - (1/speed);
+  jump_time = 80000 - ((speed_level -2) * 4000);
   start_screen();
   while (replay == true) {
     game();
