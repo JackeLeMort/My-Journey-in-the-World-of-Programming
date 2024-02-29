@@ -10,7 +10,9 @@
    - [x] recreate the collision thread, to detect when the player lose (same).
    - [x] create the best score, last score and game number window
    
-  * [ ] improve ennemies, randomize apparitions 
+  * [ ] improve ennemies, randomize apparitions
+  
+  
 Maybe later:
 - background and color
 - store best score
