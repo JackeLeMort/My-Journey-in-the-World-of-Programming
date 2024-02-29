@@ -8,10 +8,10 @@
 #include "stdbool.h"
 
 
-//function
-int start_screen(); // 69
-int game(); // 104
-int end_screen(); //136
+//FUNCTIONS and THREADS
+int start_screen(); //
+int game();
+int end_screen();
 
 int character(int position);
 
@@ -19,40 +19,45 @@ void *ennemies(void *vargp);
 void *collision(void *vargp);
 void *distance_travelled(void *vargp);
 
-//variables
+pthread_mutex_t screen_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+//VARIABLES
+//character and ennemies
 int character_position = 0;
 int ennemy_number_max = 3;
 int ennemy_position = -1;
 
-int ground;
-bool game_state;
+//distance, speed and play
 int distance = 0;
 int speed;
 int speed_default = 2;
 int speed_level;
 int jump_time;
-
+bool game_state;
 bool replay = true;
+
+//scores
 int score_last = 0;
 int game_number_session = 1;
 //int game_number_all = $idk how to do that yet
 int score_best_session = 0;
 int score_best_all = 0;
 
+//text for the user
 char *title = "Welcome to DINO";
 char *subtitle = "A little game aiming to replicate chrome dino in a terminal, made in C";
 char *ready = "Please press space when ready";
 char *score = "You ran an insane amount of: ";
 char *play_again = "Press 'space' to play again or any other key to quit.";
 
-//init screen and windows
+//windows and placement
+int ground;
 WINDOW *charac_enn;
 WINDOW *distance_box;
 
-pthread_mutex_t screen_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 
-// main function, check arguments and start functions
+// main function, check if (possible) arguments are alright, start functions start_screen, games and end_screen and initilalise speed related variables
 int main(int argc, char **argv)
 {
   if (argc > 2)
@@ -86,7 +91,7 @@ int main(int argc, char **argv)
 }
 
 
-//init screem, welcomes player and wait for his input to start game
+//init screen and important variables, welcomes player and wait for his input to start the game
 int start_screen() {
 
   initscr();
@@ -130,7 +135,7 @@ int start_screen() {
  }
 
 
-//game
+//game, recreate playscreen, start all threads, invoke character function every 0.1 second, depending on input (or stop game).
 int game(){
 
   clear();
@@ -183,7 +188,7 @@ int game(){
   return 0;
 }
 
-// END SCREEN
+// END SCREEN, store score, display it and ask for replay
 int end_screen (){
   clear();
   refresh();
@@ -209,8 +214,7 @@ int end_screen (){
 
 
 
-
-// character position
+// change character position in the character+ennenies_window depending on what the parent function (game()) send (either 0 or 1-2-1-0)
 int character(int position){
 
 
@@ -252,18 +256,22 @@ int character(int position){
   }
 }
 
+//create ennemies, make them move toward the character
 void *ennemies(void *vargp) {
   noecho();
   while (game_state) {
     for (int i = 100; i > 0; i--) {
       if (game_state == false) {i = -1; }
-        pthread_mutex_lock(&screen_mutex);
-        mvwprintw (charac_enn, 0, i, "< ");
-        wrefresh(charac_enn);
-        pthread_mutex_unlock(&screen_mutex);
-        if ( i == 5 ) { ennemy_position = 0; }
-        else if ( i == 4 ) { ennemy_position = -1; }
-        usleep(speed);
+
+      pthread_mutex_lock(&screen_mutex);
+      mvwprintw (charac_enn, 0, i, "< ");
+      wrefresh(charac_enn);
+      pthread_mutex_unlock(&screen_mutex);
+
+      if ( i == 5 ) { ennemy_position = 0; }
+      else if ( i == 4 ) { ennemy_position = -1; }
+
+      usleep(speed);
     }
     mvwprintw (charac_enn, 0, 1, " ");
     wrefresh(charac_enn);
@@ -271,7 +279,7 @@ void *ennemies(void *vargp) {
 }
 
 
-//check if lose when game is running
+//check if character and ennemie are at the same location, if yes it stops the game
 void *collision(void *vargp){
   while (game_state == true) {
     if ( character_position == ennemy_position ) {
@@ -282,7 +290,7 @@ void *collision(void *vargp){
 }
 
 
-//display current score while playing
+//count and display the already travelled distance, the score
 void *distance_travelled(void *vargp){
   noecho();
   distance = 0;
@@ -290,10 +298,12 @@ void *distance_travelled(void *vargp){
   while (game_state) {
     distance += 1;
     pthread_mutex_lock(&screen_mutex);
+
     mvwprintw (distance_box, 2, 1, "distance: %d  ", distance);
     redrawwin(distance_box);
     wrefresh(distance_box);
     pthread_mutex_unlock(&screen_mutex);
+
     usleep(speed);
   }
   pthread_exit(NULL);
