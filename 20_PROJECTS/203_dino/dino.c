@@ -54,6 +54,7 @@ char *play_again = "Press 'space' to play again or any other key to quit.";
 int ground;
 WINDOW *charac_enn;
 WINDOW *distance_box;
+WINDOW *score_box;
 
 
 
@@ -104,7 +105,8 @@ int start_screen() {
   ground = LINES*2/5;
 
   charac_enn = newwin (4, 100, ground+1, COLS/2-50);
-  distance_box = newwin (3, 16, 2, COLS-20);
+  distance_box = newwin (3, 16, 1, COLS-20);
+  score_box = newwin (4, 15, 1, 3);
 
   move (ground -5, (COLS - strlen(title)) /2 );
   printw ("%s", title);
@@ -141,6 +143,7 @@ int game(){
   clear();
   refresh();
 
+  pthread_mutex_lock(&screen_mutex);
   for (int i = 0; i < 100; i++){
     mvaddch(ground, COLS/2-50 +i, '_');
     refresh();
@@ -154,6 +157,7 @@ int game(){
   mvwaddch(charac_enn, 0, 5, 'O' );
   mvwaddch(charac_enn, 1, 5, '0' );
   wrefresh(charac_enn);
+  pthread_mutex_unlock(&screen_mutex);
 
   pthread_t collision_id;
   pthread_t distance_travelled_id;
@@ -162,6 +166,10 @@ int game(){
   pthread_create (&distance_travelled_id, NULL, distance_travelled, NULL);
   pthread_create (&ennemies_id, NULL, ennemies, NULL);
 
+  pthread_mutex_lock(&screen_mutex);
+  redrawwin(score_box);
+  wrefresh(score_box);
+  pthread_mutex_unlock(&screen_mutex);
 
   char c;
 
@@ -195,11 +203,16 @@ int end_screen (){
   score_last = distance;
   if (distance > score_best_session) { score_best_session = distance;}
   if (distance > score_best_all) { score_best_all = distance;}
+  pthread_mutex_lock(&screen_mutex);
   move(ground -5, COLS/2 - strlen(score)/2 -2);
   printw ("%s%i", score, score_last);
-  distance = 0;
   mvprintw(ground-3, COLS/2 - strlen(play_again)/2, "%s", play_again);
-  refresh();
+  mvwprintw (score_box, 1, 1, "best: %d\n last: %d", score_best_session, score_last);
+  wrefresh(score_box);
+  pthread_mutex_unlock(&screen_mutex);
+
+  distance = 0;
+
   timeout(-10);
   int c = getch();
   if (c == ' ') {
