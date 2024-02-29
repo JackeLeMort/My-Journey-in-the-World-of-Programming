@@ -6,11 +6,11 @@
   It uses ncursesi library and multithreading.
   
   What's left to do:
-   - create ennemies (first attempt didn't go so well).
-   - recreate the collision thread, to detect when the player lose (same).
-   - create the best score, last score and game number window
+   - [x] create ennemies (first attempt didn't go so well).
+   - [x] recreate the collision thread, to detect when the player lose (same).
+   - [x] create the best score, last score and game number window
    
-
+  * [ ] improve ennemies, randomize apparitions 
 Maybe later:
 - background and color
 - store best score
