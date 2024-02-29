@@ -29,7 +29,7 @@ bool game_state;
 int distance = 0;
 int speed;
 int speed_default = 2;
-int jump_time = 80000;
+int jump_time;
 
 bool replay = true;
 int score_last = 0;
@@ -64,7 +64,7 @@ int main(int argc, char **argv)
       {
       if ( !isdigit (argv[1][i]) )
         {
-        printf ("The argument must be an integer.");
+        printf ("The argument must be an (positive) integer.");
         return 1;
         }
       }
@@ -73,6 +73,7 @@ int main(int argc, char **argv)
   else if (argc == 1) {
     speed = (100000*2)/ speed_default;
   }
+  jump_time = 80000 - (1/speed);
   start_screen();
   while (replay == true) {
     game();
@@ -139,6 +140,7 @@ int game(){
     usleep(5000);
   }
 
+  ennemy_position = -1;
   game_state = true;
 
   //character
