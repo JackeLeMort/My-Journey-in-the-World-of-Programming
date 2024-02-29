@@ -22,13 +22,14 @@ void *distance_travelled(void *vargp);
 //variables
 int character_position = 0;
 int ennemy_number_max = 3;
-int ennemy_position;
+int ennemy_position = -1;
 
 int ground;
 bool game_state;
 int distance = 0;
 int speed;
 int speed_default = 2;
+int jump_time = 80000;
 
 bool replay = true;
 int score_last = 0;
@@ -101,10 +102,10 @@ int start_screen() {
   printw ("%s", title);
   move (ground -3, (COLS - strlen(subtitle))/2 );
   printw ("%s", subtitle );
-  move (ground + 6, COLS /2  -5);
-  printw ("Speed : %d", speed*2/100000);
-  move (ground  + 4, (COLS - strlen(ready))/2);
+  move (ground  + 5, (COLS - strlen(ready))/2);
   printw ("%s", ready);
+  move (ground + 7, COLS /2  -5);
+  printw ("Speed: %d", speed*2/100000);
 
   for (int i = 0; i < 100; i++){
     mvaddch(ground, COLS/2-50 +i, '_');
@@ -144,11 +145,11 @@ int game(){
   mvwaddch(charac_enn, 0, 5, 'O' );
   mvwaddch(charac_enn, 1, 5, '0' );
   wrefresh(charac_enn);
-  //
+
   pthread_t collision_id;
   pthread_t distance_travelled_id;
   pthread_t ennemies_id;
-  //pthread_create (&collision_id, NULL, collision, NULL);
+  pthread_create (&collision_id, NULL, collision, NULL);
   pthread_create (&distance_travelled_id, NULL, distance_travelled, NULL);
   pthread_create (&ennemies_id, NULL, ennemies, NULL);
 
@@ -220,7 +221,7 @@ int character(int position){
       wrefresh(charac_enn);
       character_position = 1;
       pthread_mutex_unlock(&screen_mutex);
-      usleep(speed);
+      usleep(jump_time);
       break;
 
     case 2:
@@ -231,7 +232,7 @@ int character(int position){
       wrefresh(charac_enn);
       character_position = 2;
       pthread_mutex_unlock(&screen_mutex);
-      usleep(speed*8);
+      usleep(jump_time*8);
       break;
 
     case 0:
@@ -242,7 +243,7 @@ int character(int position){
       wrefresh(charac_enn);
       character_position = 0;
       pthread_mutex_unlock(&screen_mutex);
-      usleep(speed);
+      usleep(jump_time);
       break;
   }
 }
