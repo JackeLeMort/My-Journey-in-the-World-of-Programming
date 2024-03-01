@@ -3,19 +3,19 @@
 This project is a recreation of chrome's dino in C (yeah I know, what an idea etc, but I'm learning C right now so eh, why not).
 This is my first real "project", it is more than 300 lines of code now, not nested, readable (or so I hope).
 
-It uses ncurses library and multithreading.
+It uses ncurses library and multithreading. 
 
 
 How to launch:
     There is a make file, juste either clone the whole repo then cd here or download the 2 files then type `make`, you'll need the ncurses library,   but she's likely to already be available on your system.
 
-    Or just type `cc dino.c -o dino.out -lncurses`.
+Or just type `cc dino.c -o dino.out -lncurses`.  
 
 
 Commands:
  - add a number between 1 and infinite as an argument to programm to modify the speed level.
  - press q in the game to go to end_screen.
- - press space to jump.
+ - press space to jump.  
 
 
   
