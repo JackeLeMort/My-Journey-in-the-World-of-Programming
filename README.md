@@ -2,7 +2,7 @@
 
 You'll find here my projects, weird tests and archives as I venture in the strange world of programming, developpement and computers.
 
-t is right now split in the part : 
+It is right now split in two part : 
 - 20_PROJECTS: for all my current work test and ideas.
 - 90_archives: for all the small tests, old programm and exercices from CS50.
 
