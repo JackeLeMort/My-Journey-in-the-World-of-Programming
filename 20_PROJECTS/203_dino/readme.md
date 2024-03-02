@@ -1,6 +1,6 @@
 # Dino.c
 
-This project is a recreation of chrome's dino in C (yeah I know, what an idea etc, but I'm learning C right now so eh, why not).
+This project is a recreation of chrome's dino in C (everybody told me after that I shouldn't do it in C, so I will redo it in C++ in the future).
 This is my first real "project", it is more than 300 lines of code now, not nested, readable (or so I hope).
 
 It uses ncurses library and multithreading. 
