@@ -1,0 +1,11 @@
+sort1 uses: bubble
+
+How do you know?: long for random (6.1), for reversed (5.3) but short for sorted (0.5)
+
+sort2 uses: merge
+
+How do you know?: fastest and equal time no matter the layout
+
+sort3 uses: selection
+
+How do you know?: all files take the same time, far slower than sort2
