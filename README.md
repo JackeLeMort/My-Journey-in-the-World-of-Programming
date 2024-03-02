@@ -1,4 +1,4 @@
-# Welcome in my projects repo !
+# Welcome to my projects repo !
 
 You'll find here my projects, weird tests and archives as I venture in the strange world of programming, developpement and computers.
 
