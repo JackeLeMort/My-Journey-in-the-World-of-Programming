@@ -2,8 +2,10 @@
 
 You'll find here my projects, weird tests and archives as I venture in the strange world of programming, developpement and computers.
 
-It is right now split in two part : 
-- 20_PROJECTS: for all my current work test and ideas.
+It is split in several part : 
+- 20_PROJECTS_STABLE: for the stables and usable projects.
+- 30_PROJECTS_WIP: for the projects I'm currently working, it can be new projects or newer/better version of my stable projects.
+- 50_scrits: for the scripts I write to learn and understand the shell.
 - 90_archives: for all the small tests, old programm and exercices from CS50.
 
 

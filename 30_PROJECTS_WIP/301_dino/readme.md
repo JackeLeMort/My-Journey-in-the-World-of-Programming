@@ -18,14 +18,19 @@ Commands:
  - press space to jump.  
 
 
-  
-  What's left to do:
-   - [x] create ennemies (first attempt didn't go so well).
-   - [x] recreate the collision thread, to detect when the player lose (same).
-   - [x] create the best score, last score and game number window
-   - [ ] improve ennemies, randomize apparitions
-  
-  
-Maybe later:
-- background and color
-- store best score
+# Next Version's TODO  
+
+   - [ ] Store best and last score accross sessions
+   - [ ] improve ennemie [0/2]
+     - [ ] randomize delay between apparition
+     - [ ] create several type of ennemies, and randomly pick one every ennemy appartion
+   - [ ] improve user experience
+     - [ ] allow quitting on the home_screen
+     - [ ] allow quitting while jumping
+     - [ ] allow changing speed level on end_screen
+     - [ ] allow changing speed level on start_screen
+   - [ ] improve desging overall
+     - [ ] backgrouds
+     - [ ] character
+     - [ ] ennemies
+     
