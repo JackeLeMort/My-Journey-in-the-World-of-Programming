@@ -9,10 +9,7 @@ It is split in several part :
 - 50_scrits: for the scripts I write to learn and understand the shell.
 - 90_archives: for all the small tests, old programm and exercices from CS50.  
 
-<p>
-
-
-<p />
+<br>
 
 
 ## ressources I used :
