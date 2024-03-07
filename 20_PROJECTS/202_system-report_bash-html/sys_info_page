@@ -24,16 +24,16 @@ EOF
 }
 
 report_home_space () {
-    if [[ "(id -u)" -eq 0 ]]; then
+    if [[ "$(id -u)" -eq 0 ]]; then
         cat  <<-EOF
              <h2>Home Space Utilization (All Users)</h2>
-             <pre>$(dust -d 0 -cpb /home/*)</pre>
-             EOF
+             <pre>$(du -sh /home/*)</pre>
+EOF
     else
         cat <<-EOF
             <h2>Home Space Utilisation ($USER)</h2>
-             <pre>$(dust -d 0 -cpb /home)</pre>
-             EOF
+             <pre>$(du -sh $HOME)</pre>
+EOF
     fi
     return
 }
