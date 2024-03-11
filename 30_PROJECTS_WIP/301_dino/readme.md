@@ -20,7 +20,11 @@ Commands:
 
 # Next Version's TODO  
 
+Priority
+   - [ ] Move variable and header to another file and transform variables to structures
    - [ ] Store best and last score accross sessions
+   
+Else
    - [ ] improve ennemie [0/2]
      - [ ] randomize delay between apparition
      - [ ] create several type of ennemies, and randomly pick one every ennemy appartion
