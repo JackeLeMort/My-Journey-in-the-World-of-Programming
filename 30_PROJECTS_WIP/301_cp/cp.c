@@ -1,26 +1,35 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <stdint.h>
 
-typedef uint8_t byte;
+int main(int argc, char **argv) {
+    if (argc != 3) {
+        printf("Usage: ./cp file_to_copy new_filename\n");
+        return 1;
+    }
 
-int main (int argc, char **argv)
-{
-  if (argc < 2 || argc > 3){
-    printf ("Usage: ./cp file_to_copy (optionnal: new_filename)\n");
-  }
+    FILE *source = fopen(argv[1], "rb");
+    if (source == NULL) {
+      perror("couldn't open source file");
+      return 2;
+    }
 
+    FILE *destination = fopen(argv[2], "wb");
+    if (destination == NULL) {
+      perror("couldn't open destination file");
+      fclose(source);
+      return 3;
+    }
 
-  FILE *source = fopen (argv[1], "rb");
-  FILE *destination = fopen (argv[2], "wb");
+    size_t buffer_size = 4096;
+    char buffer[buffer_size];
+    size_t bytesread;
 
-  byte b;
+    while ((bytesread = fread(buffer, 1, buffer_size, source)) > 0) {
+        fwrite(buffer, 1, bytesread, destination);
+    }
 
-  while ( fread (&b, sizeof(b), 1, source) != 0){
-    fwrite (&b, sizeof(1), 1, destination);
-  }
+    fclose(destination);
+    fclose(source);
 
-  fclose(source);
-  fclose(destination);
+    return 0;
 }
