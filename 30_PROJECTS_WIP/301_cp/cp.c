@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdint.h>
+
+typedef uint8_t byte;
 
 int main (int argc, char **argv)
 {
@@ -12,7 +15,11 @@ int main (int argc, char **argv)
   FILE *source = fopen (argv[1], "rb");
   FILE *destination = fopen (argv[2], "wb");
 
-  fread (source, )
+  byte = b;
+
+  while ( fread (&b, sizeof(b), 1, source) != 0){
+    fwrite (&b, sizeof(1), 1, destination);
+  }
 
   fclose(source);
   fclose(destination);
