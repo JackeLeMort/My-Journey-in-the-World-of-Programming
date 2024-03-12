@@ -15,7 +15,7 @@ int main (int argc, char **argv)
   FILE *source = fopen (argv[1], "rb");
   FILE *destination = fopen (argv[2], "wb");
 
-  byte = b;
+  byte b;
 
   while ( fread (&b, sizeof(b), 1, source) != 0){
     fwrite (&b, sizeof(1), 1, destination);
