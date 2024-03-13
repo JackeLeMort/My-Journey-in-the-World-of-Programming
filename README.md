@@ -1,4 +1,6 @@
-# Welcome to my projects repo !
+<p align="center">
+  <h1># Welcome to my projects repo !</h1>
+</p>
 
 You'll find here my projects, weird tests and archives as I venture in the strange world of programming, developpement and computers.
 
@@ -8,9 +10,8 @@ It is split in several part :
 - **30_PROJECTS_WIP**: for the projects I'm currently working on, it can be new projects or newer/better version of my stable projects.
 - **50_scrits**: for the scripts I write to learn and understand the shell.
 - **90_archives**: for all the small tests, old programm and exercices from CS50.  
-  
-  
 
+<br><br>
 ________
 
 ## ressources I used :
