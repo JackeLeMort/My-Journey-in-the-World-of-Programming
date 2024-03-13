@@ -1,6 +1,4 @@
-<p align="center">
-  <h1># Welcome to my projects repo !</h1>
-</p>
+  <h1 align="center"> Welcome to my projects repo !</h1>
 
 You'll find here my projects, weird tests and archives as I venture in the strange world of programming, developpement and computers.
 
