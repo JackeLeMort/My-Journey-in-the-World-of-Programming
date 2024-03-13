@@ -1,4 +1,5 @@
   <h1 align="center"> Welcome to my projects repo !</h1>
+<br>
 
 You'll find here my projects, weird tests and archives as I venture in the strange world of programming, developpement and computers.
 
@@ -10,6 +11,7 @@ It is split in several part :
 - **90_archives**: for all the small tests, old programm and exercices from CS50.  
 
 <br><br>
+
 ________
 
 ## ressources I used :
