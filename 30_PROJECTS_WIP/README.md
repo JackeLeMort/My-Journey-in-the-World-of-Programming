@@ -3,6 +3,7 @@
 They are sorted by order of importance and time I dedicate to them right now.
 
 ## Project's list 
+ + [ ] 311_playlists: A better playlist management system
  + [ ] 321_dino: a chrome dino like game for TUI, V1 already avaible in ../20_PROJECTS_stable
    + [x] V1
    + [ ] V2
@@ -15,4 +16,4 @@ They are sorted by order of importance and time I dedicate to them right now.
 - s, little programm inspired by sl to make fun of you if you type ;s instead of ls
 - tetris
 - tron
-- snage
+- snake
