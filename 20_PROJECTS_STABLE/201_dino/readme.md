@@ -8,11 +8,11 @@ This is my first real "project", it is more than 300 lines of code now, not nest
 It uses ncurses and multithreading. 
 
 
-How to launch:
-    There is a make file, juste either 
-    - Clone the whole repo then cd (or zoxide, amazing tool, I recommand) here 
-    - Or download the 2 files then type `make`, 
-    - Or just type `cc dino.c -o dino.out -lncurses`.  
+How to launch:  
+    There is a make file, juste either   
+    - Clone the whole repo then cd (or zoxide, amazing tool, I recommand) here   
+    - Or download the 2 files then type `make`,   
+    - Or just type `cc dino.c -o dino.out -lncurses`.    
 you'll need the `ncurses library`, but it's likely already available on your system.
 
 
